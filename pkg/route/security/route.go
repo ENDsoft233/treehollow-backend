@@ -68,11 +68,17 @@ func ApiListenHttp() {
 
 	r.POST("/v3/security/login/create_wechat_account",
 		loginParamsCheckMiddleware,
-		checkWechatAccountNotRegistered,
+		checkAccountNotRegisteredViaWechatCode,
 		createWechatAccount)
 	r.POST("/v3/security/login/login_wechat",
 		loginParamsCheckMiddleware,
-		checkWechatAccountIsRegistered,
+		checkAccountIsRegisteredViaWechatCode,
+		loginWechatGetUserMiddleware,
+		loginCheckMaxDevices,
+		login)
+	r.POST("/v3/security/login/login_charging",
+		loginParamsCheckMiddleware,
+		checkAccountIsRegisteredViaWechatAccessToken,
 		loginWechatGetUserMiddleware,
 		loginCheckMaxDevices,
 		login)

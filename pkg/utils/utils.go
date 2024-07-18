@@ -289,3 +289,34 @@ func GetWechatAccessFromCode(code string) (wechatAccess WechatAccess, err error)
 	}
 	return wechatAccess, nil
 }
+
+type WechatCheckAccessToken struct {
+	ErrCode int    `json:"errcode"`
+	ErrMsg  string `json:"errmsg"`
+}
+
+func CheckWechatAccessToken(accessToken string, openid string) error {
+	resp, err := http.Get("https://api.weixin.qq.com/sns/auth?access_token=" + accessToken + "&openid=" + openid)
+	if err != nil {
+		return err
+	}
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	err = resp.Body.Close()
+	if err != nil {
+		return err
+	}
+
+	var wechatCheckAccessToken WechatCheckAccessToken
+	err = json.Unmarshal(body, &wechatCheckAccessToken)
+	if err != nil {
+		return err
+	}
+	if wechatCheckAccessToken.ErrCode != 0 {
+		return errors2.New(wechatCheckAccessToken.ErrMsg)
+	}
+	return nil
+}
