@@ -259,15 +259,12 @@ type WechatAccess struct {
 	AccessToken string `json:"access_token"`
 	ExpiresIn   int    `json:"expires_in"`
 	Openid      string `json:"openid"`
+	ErrCode     int    `json:"errcode"`
+	ErrMsg      string `json:"errmsg"`
 }
 
 func GetWechatAccessFromCode(code string) (wechatAccess WechatAccess, err error) {
 	resp, err := http.Get("http://172.22.0.1:33123/v1/wechat/" + code)
-	if err != nil {
-		return WechatAccess{}, err
-	}
-
-	err = resp.Body.Close()
 	if err != nil {
 		return WechatAccess{}, err
 	}
@@ -277,9 +274,18 @@ func GetWechatAccessFromCode(code string) (wechatAccess WechatAccess, err error)
 		return WechatAccess{}, err
 	}
 
+	err = resp.Body.Close()
+	if err != nil {
+		return WechatAccess{}, err
+	}
+
 	err = json.Unmarshal(body, &wechatAccess)
 	if err != nil {
 		return WechatAccess{}, err
+	}
+	if wechatAccess.ErrCode != 0 {
+		logger.NewError(nil, "GetWechatAccessFromCodeFailed", string(body))
+		return WechatAccess{}, errors2.New(wechatAccess.ErrMsg)
 	}
 	return wechatAccess, nil
 }
