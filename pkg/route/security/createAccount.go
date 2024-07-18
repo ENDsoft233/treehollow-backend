@@ -187,6 +187,7 @@ func createAccount(c *gin.Context) {
 			user.EmailEncrypted = emailEncrypted
 			user.UpdatedAt = time.Now()
 			user.ForgetPwNonce = utils.GenNonce()
+			user.WechatOpenId = ""
 			if err = tx.Model(&base.User{}).Where("id = ?", user.ID).Updates(user).Error; err != nil {
 				base.HttpReturnWithCodeMinusOne(c, logger.NewError(err, "UpdateOldUserFailed", consts.DatabaseWriteFailedString))
 				return err
@@ -271,5 +272,24 @@ func changePassword(c *gin.Context) {
 		})
 
 		return nil
+	})
+}
+
+func createWechatAccount(c *gin.Context) {
+	openid := c.MustGet("openid").(string)
+
+	var user base.User
+
+	_ = base.GetDb(false).Transaction(func(tx *gorm.DB) error {
+		user = base.User{
+			WechatOpenId:  openid,
+			ForgetPwNonce: utils.GenNonce(),
+			Role:          base.NormalUserRole,
+		}
+		if err := tx.Create(&user).Error; err != nil {
+			base.HttpReturnWithCodeMinusOne(c, logger.NewError(err, "CreateUserFailed", consts.DatabaseWriteFailedString))
+			return err
+		}
+		return createDevice(c, &user, openid, tx)
 	})
 }

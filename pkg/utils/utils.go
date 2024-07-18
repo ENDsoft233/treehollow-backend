@@ -19,6 +19,7 @@ import (
 	_ "image/gif"
 	_ "image/jpeg"
 	_ "image/png"
+	"io"
 	"io/ioutil"
 	"math/big"
 	"net"
@@ -252,4 +253,33 @@ func UnscopedTx(tx *gorm.DB, b bool) *gorm.DB {
 		return tx.Unscoped()
 	}
 	return tx
+}
+
+type WechatAccess struct {
+	AccessToken string `json:"access_token"`
+	ExpiresIn   int    `json:"expires_in"`
+	Openid      string `json:"openid"`
+}
+
+func GetWechatAccessFromCode(code string) (wechatAccess WechatAccess, err error) {
+	resp, err := http.Get("http://172.22.0.1:33123/v1/wechat/" + code)
+	if err != nil {
+		return WechatAccess{}, err
+	}
+
+	err = resp.Body.Close()
+	if err != nil {
+		return WechatAccess{}, err
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return WechatAccess{}, err
+	}
+
+	err = json.Unmarshal(body, &wechatAccess)
+	if err != nil {
+		return WechatAccess{}, err
+	}
+	return wechatAccess, nil
 }

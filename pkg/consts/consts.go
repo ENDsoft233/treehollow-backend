@@ -2,7 +2,7 @@ package consts
 
 import "time"
 
-//TODO: (low priority)move some of these consts to config file
+// TODO: (low priority)move some of these consts to config file
 const PageSize = 30
 const MsgPageSize = 10
 const SystemLoadThreshold float64 = 5.0
@@ -32,6 +32,8 @@ const DatabaseReadFailedString = "数据库读取失败，请联系管理员"
 const DatabaseWriteFailedString = "数据库写入失败，请联系管理员"
 const DatabaseDamagedString = "数据库损坏，请联系管理员"
 const DatabaseEncryptFailedString = "数据库加密失败，请联系管理员"
+
+const WeChatGetAccessFailedString = "透过微信验证状态失败"
 
 const DzName = "洞主"
 const ExtraNamePrefix = "You Win "

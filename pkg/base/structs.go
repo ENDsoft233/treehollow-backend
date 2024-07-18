@@ -38,6 +38,7 @@ const (
 // codebeat:disable[TOO_MANY_IVARS]
 type User struct {
 	ID             int32  `gorm:"primaryKey;autoIncrement;not null"`
+	WechatOpenId   string `gorm:"index;type:varchar(50) NOT NULL"`
 	OldEmailHash   string `gorm:"index;type:varchar(64) NOT NULL"`
 	OldToken       string `gorm:"index;type:varchar(32) NOT NULL"`
 	EmailEncrypted string `gorm:"index;type:varchar(200) NOT NULL"`

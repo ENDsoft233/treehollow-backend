@@ -66,6 +66,17 @@ func ApiListenHttp() {
 	r.POST("/v3/security/logout", logout)
 	r.POST("/v3/security/update_ios_token", updateIOSToken)
 
+	r.POST("/v3/security/login/create_wechat_account",
+		loginParamsCheckMiddleware,
+		checkWechatAccountNotRegistered,
+		createWechatAccount)
+	r.POST("/v3/security/login/login_wechat",
+		loginParamsCheckMiddleware,
+		checkWechatAccountIsRegistered,
+		loginWechatGetUserMiddleware,
+		loginCheckMaxDevices,
+		login)
+
 	listenAddr := viper.GetString("security_api_listen_address")
 	if strings.Contains(listenAddr, ":") {
 		_ = r.Run(listenAddr)

@@ -153,3 +153,30 @@ func logout(c *gin.Context) {
 		"code": 0,
 	})
 }
+
+func loginWechatGetUserMiddleware(c *gin.Context) {
+	openid := c.MustGet("openid").(string)
+
+	var user base.User
+
+	err := base.GetDb(false).Where("wechat_open_id = ?", openid).
+		Model(&base.User{}).First(&user).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewSimpleError("MiddlewareNoAuth", "用户名或密码错误", logger.WARN))
+		} else {
+			base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewError(err, "GetUserByEmailEncryptedFailed", consts.DatabaseReadFailedString))
+		}
+		return
+	}
+	if user.Role == base.BannedUserRole {
+		base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewSimpleError("AccountFrozen",
+			"您的账户已被冻结。如果需要解冻，请联系"+
+				viper.GetString("contact_email")+"。", logger.ERROR))
+
+		return
+	}
+
+	c.Set("user", user)
+	c.Next()
+}

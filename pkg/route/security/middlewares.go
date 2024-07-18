@@ -86,3 +86,53 @@ func checkAccountIsRegistered(c *gin.Context) {
 	c.Set("email_hash", emailHash)
 	c.Next()
 }
+
+func checkWechatAccountNotRegistered(c *gin.Context) {
+	code := strings.ToLower(c.PostForm("code"))
+	wa, waErr := utils.GetWechatAccessFromCode(code)
+	if waErr != nil {
+		base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewError(waErr, "GetWechatAccessFromCodeFailed", consts.WeChatGetAccessFailedString))
+		return
+	}
+	openid := wa.Openid
+
+	var count int64
+	err := base.GetDb(false).Where("wechat_open_id = ?", openid).
+		Model(&base.User{}).Count(&count).Error
+	if err != nil {
+		base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewError(err, "CheckWechatAccountRegisteredFailed", consts.DatabaseReadFailedString))
+		return
+	}
+	if count == 1 {
+		base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewSimpleError("AlreadyRegisteredWechatError", "你已经注册过了！", logger.WARN))
+		return
+	}
+
+	c.Set("openid", openid)
+	c.Next()
+}
+
+func checkWechatAccountIsRegistered(c *gin.Context) {
+	code := strings.ToLower(c.PostForm("code"))
+	wa, waErr := utils.GetWechatAccessFromCode(code)
+	if waErr != nil {
+		base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewError(waErr, "GetWechatAccessFromCodeFailed", consts.WeChatGetAccessFailedString))
+		return
+	}
+	openid := wa.Openid
+
+	var count int64
+	err := base.GetDb(false).Where("wechat_open_id = ?", openid).
+		Model(&base.User{}).Count(&count).Error
+	if err != nil {
+		base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewError(err, "CheckWechatAccountUnRegisteredFailed", consts.DatabaseReadFailedString))
+		return
+	}
+	if count != 1 {
+		base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewSimpleError("NotRegisteredWechatError", "你还没有注册过！", logger.WARN))
+		return
+	}
+
+	c.Set("openid", openid)
+	c.Next()
+}
