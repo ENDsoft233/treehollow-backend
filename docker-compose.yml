@@ -1,0 +1,13 @@
+version: '3'
+services:
+  treehollow-backend:
+    build: .
+    container_name: treehollow-backend
+    ports:
+      - 36603:36603
+      - 36604:36604
+      - 36605:36605
+    volumes:
+      - .:/app
+    working_dir: /app
+    entrypoint: /app/start.sh

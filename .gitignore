@@ -23,3 +23,6 @@ log.txt
 TODO.md
 *.mmdb
 *.log
+
+data/
+deploy/
