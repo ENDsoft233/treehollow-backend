@@ -25,8 +25,8 @@ func checkEmailParamsCheckMiddleware(c *gin.Context) {
 	oldToken := c.PostForm("old_token")
 	email := strings.ToLower(c.PostForm("email"))
 
-	if len(email) > 100 || len(oldToken) > 32 || len(recaptchaToken) > 2000 || len(recaptchaVersion) > 2 {
-		base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewSimpleError("CheckEmailParamsOutOfBound", "参数错误", logger.WARN))
+	if len(email) > 100 || len(oldToken) > 32 || len(recaptchaToken) > 3000 || len(recaptchaVersion) > 2 {
+		base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewSimpleError("CheckEmailParamsOutOfBound", "接口参数异常", logger.WARN))
 		return
 	}
 	emailHash := utils.HashEmail(email)
