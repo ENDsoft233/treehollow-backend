@@ -87,31 +87,6 @@ func checkAccountIsRegistered(c *gin.Context) {
 	c.Next()
 }
 
-func checkAccountNotRegisteredViaWechatCode(c *gin.Context) {
-	code := c.PostForm("code")
-	wa, waErr := utils.GetWechatAccessFromCode(code)
-	if waErr != nil {
-		base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewError(waErr, "GetWechatAccessFromCodeFailed", consts.WeChatGetAccessFailedString))
-		return
-	}
-	openid := wa.Openid
-
-	var count int64
-	err := base.GetDb(false).Where("wechat_open_id = ?", openid).
-		Model(&base.User{}).Count(&count).Error
-	if err != nil {
-		base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewError(err, "CheckWechatAccountRegisteredFailed", consts.DatabaseReadFailedString))
-		return
-	}
-	if count == 1 {
-		base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewSimpleError("AlreadyRegisteredWechatError", "你已经注册过了！", logger.WARN))
-		return
-	}
-
-	c.Set("openid", openid)
-	c.Next()
-}
-
 func checkAccountIsRegisteredViaWechatCode(c *gin.Context) {
 	code := c.PostForm("code")
 	wa, waErr := utils.GetWechatAccessFromCode(code)
@@ -130,6 +105,31 @@ func checkAccountIsRegisteredViaWechatCode(c *gin.Context) {
 	}
 	if count != 1 {
 		base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewSimpleError("NotRegisteredWechatError", "你还没有注册过！", logger.WARN))
+		return
+	}
+
+	c.Set("openid", openid)
+	c.Next()
+}
+
+func checkAccountNotRegisteredViaWechatAccessToken(c *gin.Context) {
+	accessToken := c.PostForm("access_token")
+	openid := c.PostForm("openid")
+	checkAccessToken := utils.CheckWechatAccessToken(accessToken, openid)
+	if checkAccessToken != nil {
+		base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewError(checkAccessToken, "CheckWechatAccessTokenFailed", consts.WeChatGetAccessFailedString))
+		return
+	}
+
+	var count int64
+	err := base.GetDb(false).Where("wechat_open_id = ?", openid).
+		Model(&base.User{}).Count(&count).Error
+	if err != nil {
+		base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewError(err, "CheckWechatAccountRegisteredFailed", consts.DatabaseReadFailedString))
+		return
+	}
+	if count == 1 {
+		base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewSimpleError("AlreadyRegisteredWechatError", "你已经注册过了！", logger.WARN))
 		return
 	}
 
@@ -160,4 +160,19 @@ func checkAccountIsRegisteredViaWechatAccessToken(c *gin.Context) {
 
 	c.Set("openid", openid)
 	c.Next()
+}
+
+func checkIpInAllowedSubnets(c *gin.Context) {
+	ip := c.ClientIP()
+	if !utils.IsInAllowedSubnet(ip) {
+		base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewSimpleError("IpNotInAllowedSubnets", "IP"+ip+"不在允许的子网内", logger.WARN))
+		return
+	}
+	c.Next()
+}
+
+func returnOK(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"code": 0,
+	})
 }
