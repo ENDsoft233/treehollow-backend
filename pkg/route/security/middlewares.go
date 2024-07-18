@@ -88,7 +88,7 @@ func checkAccountIsRegistered(c *gin.Context) {
 }
 
 func checkWechatAccountNotRegistered(c *gin.Context) {
-	code := strings.ToLower(c.PostForm("code"))
+	code := c.PostForm("code")
 	wa, waErr := utils.GetWechatAccessFromCode(code)
 	if waErr != nil {
 		base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewError(waErr, "GetWechatAccessFromCodeFailed", consts.WeChatGetAccessFailedString))
@@ -113,7 +113,7 @@ func checkWechatAccountNotRegistered(c *gin.Context) {
 }
 
 func checkWechatAccountIsRegistered(c *gin.Context) {
-	code := strings.ToLower(c.PostForm("code"))
+	code := c.PostForm("code")
 	wa, waErr := utils.GetWechatAccessFromCode(code)
 	if waErr != nil {
 		base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewError(waErr, "GetWechatAccessFromCodeFailed", consts.WeChatGetAccessFailedString))
