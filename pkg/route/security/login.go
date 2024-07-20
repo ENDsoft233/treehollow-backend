@@ -2,7 +2,6 @@ package security
 
 import (
 	"errors"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/spf13/viper"
@@ -11,7 +10,6 @@ import (
 	"net"
 	"net/http"
 	"strings"
-	"time"
 	"treehollow-v3-backend/pkg/base"
 	"treehollow-v3-backend/pkg/consts"
 	"treehollow-v3-backend/pkg/logger"
@@ -124,13 +122,13 @@ func login(c *gin.Context) {
 		"token": token,
 		"uuid":  deviceUUID,
 	})
-	_ = base.GetDb(false).Create(&base.SystemMessage{
-		UserID: user.ID,
-		Title:  "新的登录",
-		Text: fmt.Sprintf("您好，您的账户在%s于%s使用设备\"%s\"登录。\n\n如果这不是您本人所为，请您立刻修改密码。",
-			time.Now().Format("2006-01-02 15:04"), city, deviceInfo),
-		BanID: -1,
-	}).Error
+	//_ = base.GetDb(false).Create(&base.SystemMessage{
+	//	UserID: user.ID,
+	//	Title:  "新的登录",
+	//	Text: fmt.Sprintf("您好，您的账户在%s于%s使用设备\"%s\"登录。\n\n如果这不是您本人所为，请您立刻修改密码。",
+	//		time.Now().Format("2006-01-02 15:04"), city, deviceInfo),
+	//	BanID: -1,
+	//}).Error
 	//TODO: (middle priority) send email
 	return
 }
