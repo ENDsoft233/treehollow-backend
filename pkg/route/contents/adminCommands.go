@@ -18,7 +18,7 @@ import (
 	"treehollow-v3-backend/pkg/utils"
 )
 
-//TODO: (middle priority) better result for `reports`
+// TODO: (middle priority) better result for `reports`
 func adminDecryptionCommand() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if !viper.GetBool("allow_admin_commands") {
@@ -38,7 +38,7 @@ func adminDecryptionCommand() gin.HandlerFunc {
 				err3 := base.GetDb(true).First(&post, int32(pid)).Error
 				if err3 != nil {
 					if errors.Is(err3, gorm.ErrRecordNotFound) {
-						base.HttpReturnWithErrAndAbort(c, -101, logger.NewSimpleError("DecryptPostNoPid", "找不到这条树洞", logger.WARN))
+						base.HttpReturnWithErrAndAbort(c, -101, logger.NewSimpleError("DecryptPostNoPid", "找不到这条鼠洞", logger.WARN))
 					} else {
 						base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewError(err3, "GetSavedPostFailed", consts.DatabaseReadFailedString))
 
@@ -57,7 +57,7 @@ func adminDecryptionCommand() gin.HandlerFunc {
 				err3 := base.GetDb(true).First(&comment, int32(cid)).Error
 				if err3 != nil {
 					if errors.Is(err3, gorm.ErrRecordNotFound) {
-						base.HttpReturnWithErrAndAbort(c, -101, logger.NewSimpleError("DecryptCommentNoPid", "找不到这条树洞评论", logger.WARN))
+						base.HttpReturnWithErrAndAbort(c, -101, logger.NewSimpleError("DecryptCommentNoPid", "找不到这条鼠洞评论", logger.WARN))
 					} else {
 						base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewError(err3, "GetSavedCommentFailed", consts.DatabaseReadFailedString))
 
@@ -113,31 +113,31 @@ func adminHelpCommand() gin.HandlerFunc {
 		if base.CanShowHelp(&user) && keywords == "help" {
 			info := ""
 			if base.CanViewStatistics(&user) {
-				info += "`stats`: 查看树洞统计信息\n"
+				info += "`stats`: 查看鼠洞统计信息\n"
 			}
 			if base.CanViewDecryptionMessages(&user) {
-				info += "`decrypt pid=123`, `decrypt cid=1234`: 查看树洞发帖人个人信息的待解密消息\n"
+				info += "`decrypt pid=123`, `decrypt cid=1234`: 查看鼠洞发帖人个人信息的待解密消息\n"
 			}
 			if base.CanViewDeletedPost(&user) {
-				info += "`dels`: 搜索所有被管理员删除的树洞和回复(包括删除后恢复的)\n"
-				info += "`//setflag NOT_SHOW_DELETED=on`(注意大小写): 在除了`deleted`搜索界面外的其他界面隐藏被删除的树洞\n"
+				info += "`dels`: 搜索所有被管理员删除的鼠洞和回复(包括删除后恢复的)\n"
+				info += "`//setflag NOT_SHOW_DELETED=on`(注意大小写): 在除了`deleted`搜索界面外的其他界面隐藏被删除的鼠洞\n"
 			}
 			if base.CanViewAllSystemMessages(&user) {
 				info += "`msgs`: 查看所有用户收到的系统消息\n"
 			}
 			if base.CanViewReports(&user) {
-				info += "`rep_dels`: 查看所有用户的【删除举报】(树洞or回复)\n"
+				info += "`rep_dels`: 查看所有用户的【删除举报】(鼠洞or回复)\n"
 			}
 			if base.CanViewLogs(&user) {
-				info += "`rep_recalls`: 查看所有用户的【撤回】(树洞or回复)\n"
-				info += "`rep_folds`: 查看所有用户的【折叠举报】(树洞or回复)\n"
+				info += "`rep_recalls`: 查看所有用户的【撤回】(鼠洞or回复)\n"
+				info += "`rep_folds`: 查看所有用户的【折叠举报】(鼠洞or回复)\n"
 				info += "`log_tags`: 查看所有【管理员打Tag】的操作日志\n"
 				info += "`log_dels`: 查看所有的【管理员删除】\n"
 				info += "`log_unbans`: 查看所有【撤销删除】、【解禁】的操作日志\n"
 				info += "`logs`: 查看所有举报、删帖、打tag的操作日志\n"
 			}
 			if base.CanShutdown(&user) {
-				info += "`shutdown`: 关闭树洞, 请谨慎使用此命令\n"
+				info += "`shutdown`: 关闭鼠洞, 请谨慎使用此命令\n"
 			}
 
 			if base.GetDeletePostRateLimitIn24h(user.Role) > 0 {
@@ -203,7 +203,7 @@ func adminStatisticsCommand() gin.HandlerFunc {
 				base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewError(err, "GetTotalNewOldUserFailed", consts.DatabaseReadFailedString))
 				return
 			}
-			info += "总注册人数（包含老版本树洞账户）：" + strconv.Itoa(int(count)) + "\n"
+			info += "总注册人数（包含老版本鼠洞账户）：" + strconv.Itoa(int(count)) + "\n"
 
 			err = base.GetDb(true).Model(&base.Post{}).
 				Where("created_at > ?", time.Now().AddDate(0, 0, -1)).
@@ -221,7 +221,7 @@ func adminStatisticsCommand() gin.HandlerFunc {
 				base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewError(err, "GetDeletedPostStatsFailed", consts.DatabaseReadFailedString))
 				return
 			}
-			info += "24h内树洞删帖数：" + strconv.Itoa(int(count)) + "\n"
+			info += "24h内鼠洞删帖数：" + strconv.Itoa(int(count)) + "\n"
 
 			err = base.GetDb(true).Model(&base.Comment{}).
 				Where("deleted_at is not null and created_at > ?", time.Now().AddDate(0, 0, -1)).

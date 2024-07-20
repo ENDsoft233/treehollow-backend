@@ -221,9 +221,9 @@ func (report *Report) ToString() string {
 	rtn := ""
 	var name string
 	if report.IsComment {
-		name = fmt.Sprintf("To:树洞回复#%d-%d", report.PostID, report.CommentID)
+		name = fmt.Sprintf("To:鼠洞回复#%d-%d", report.PostID, report.CommentID)
 	} else {
-		name = fmt.Sprintf("To:树洞#%d", report.PostID)
+		name = fmt.Sprintf("To:鼠洞#%d", report.PostID)
 	}
 	rtn = fmt.Sprintf("%s\n***\nReason: %s", name, report.Reason)
 	return rtn

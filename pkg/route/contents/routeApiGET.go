@@ -70,7 +70,7 @@ func detailPost(c *gin.Context) {
 	err3 := base.GetDb(canViewDelete).First(&post, int32(pid)).Error
 	if err3 != nil {
 		if errors.Is(err3, gorm.ErrRecordNotFound) {
-			base.HttpReturnWithErr(c, -101, logger.NewSimpleError("DetailPostPidNotFound", "找不到这条树洞", logger.WARN))
+			base.HttpReturnWithErr(c, -101, logger.NewSimpleError("DetailPostPidNotFound", "找不到这条鼠洞", logger.WARN))
 		} else {
 			base.HttpReturnWithCodeMinusOne(c, logger.NewError(err3, "DetailPostError", consts.DatabaseReadFailedString))
 		}

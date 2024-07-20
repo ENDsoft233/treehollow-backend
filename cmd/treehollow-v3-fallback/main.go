@@ -30,11 +30,11 @@ func upgradePrompt(c *gin.Context) {
 				"img_base_url_bak":     viper.GetString("img_base_url_bak"),
 				"fold_tags":            viper.GetStringSlice("fold_tags"),
 				"web_frontend_version": "v2.0.0",
-				"announcement":         "发现树洞新版本，正在更新...",
+				"announcement":         "发现鼠洞新版本，正在更新...",
 			},
 			"data": []gin.H{{
 				"pid":       0,
-				"text":      "请更新到最新版本树洞。（点击界面右上角“账户”( i )，点击“强制检查更新”）",
+				"text":      "请更新到最新版本鼠洞。（点击界面右上角“账户”( i )，点击“强制检查更新”）",
 				"type":      "text",
 				"timestamp": 2147483647,
 				"reply":     0,
@@ -46,7 +46,7 @@ func upgradePrompt(c *gin.Context) {
 		})
 	} else {
 		c.JSON(http.StatusOK, gin.H{
-			"msg": "请更新到最新版本树洞。（点击界面右上角“账户”( i )，点击“强制检查更新”）",
+			"msg": "请更新到最新版本鼠洞。（点击界面右上角“账户”( i )，点击“强制检查更新”）",
 		})
 	}
 }
@@ -59,11 +59,11 @@ func upgradePromptV2(c *gin.Context) {
 			"img_base_url_bak":     viper.GetString("img_base_url_bak"),
 			"fold_tags":            viper.GetStringSlice("fold_tags"),
 			"web_frontend_version": "v3.0.0",
-			"announcement":         "发现树洞新版本，正在更新...",
+			"announcement":         "发现鼠洞新版本，正在更新...",
 		},
 		"data": []gin.H{{
 			"pid":         0,
-			"text":        "请更新到最新版本树洞。（点击界面右上角“账户”( i )，点击“强制检查更新”）",
+			"text":        "请更新到最新版本鼠洞。（点击界面右上角“账户”( i )，点击“强制检查更新”）",
 			"type":        "text",
 			"timestamp":   2147483647,
 			"reply":       0,

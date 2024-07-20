@@ -146,7 +146,7 @@ func logout(c *gin.Context) {
 	}
 	if result.RowsAffected != 1 {
 		base.HttpReturnWithErrAndAbort(c, -100, logger.NewSimpleError("TokenExpired",
-			"登录凭据过期，请使用邮箱重新登录。", logger.INFO))
+			"无效的凭据，请先完成身份验证或重新登录。", logger.INFO))
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{

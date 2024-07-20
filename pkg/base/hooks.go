@@ -8,8 +8,8 @@ import (
 	"treehollow-v3-backend/pkg/utils"
 )
 
-//TODO: (high priority)delete push messages for ios and android
-//Set the first registered user to be superuser
+// TODO: (high priority)delete push messages for ios and android
+// Set the first registered user to be superuser
 func (u *User) AfterCreate(tx *gorm.DB) (err error) {
 	if u.ID == 1 {
 		err = tx.Model(u).Update("role", SuperUserRole).Error
@@ -64,12 +64,12 @@ func (ban *Ban) AfterCreate(tx *gorm.DB) (err error) {
 		UserID: ban.UserID,
 		BanID:  ban.ID,
 		Title:  "封禁提示",
-		Text:   ban.Reason + "\n\n这是您第" + calcReportedTimes(ban) + "次被举报，在" + utils.TimestampToString(ban.ExpireAt) + "之前您将无法发布树洞。",
+		Text:   ban.Reason + "\n\n这是您第" + calcReportedTimes(ban) + "次被举报，在" + utils.TimestampToString(ban.ExpireAt) + "之前您将无法发布鼠洞。",
 	}).Error
 	return
 }
 
-//TODO: (low priority)maybe, show reason here?
+// TODO: (low priority)maybe, show reason here?
 func (ban *Ban) AfterDelete(tx *gorm.DB) (err error) {
 	err = tx.Create(&SystemMessage{
 		UserID: ban.UserID,

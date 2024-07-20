@@ -2,7 +2,7 @@
 ######################## 以下配置必须更改后才可运行程序
 
 ### 网站名称
-name: T大树洞
+name: T大鼠洞
 
 ### 联系邮箱
 contact_email: contact@thuhole.com
@@ -22,7 +22,7 @@ is_debug: true
 ### 用户邮箱在数据库中会通过一个盐被单向加密。
 salt: CHANGE_ME!
 
-### 树洞内容服务的监听端口和登录服务的监听端口(或unix socket)。这两个端口和程序分开的。
+### 鼠洞内容服务的监听端口和登录服务的监听端口(或unix socket)。这两个端口和程序分开的。
 security_api_listen_address: /tmp/treehollow/treehollow-security-api.sock
 services_api_listen_address: /tmp/treehollow/treehollow-services-api.sock
 push_api_listen_address: /tmp/treehollow/treehollow-push-api.sock
@@ -70,7 +70,7 @@ key_keepers_pgp_public_keys: [
 ######################## 可选配置
 ######################## 以下配置不必要更改
 
-### 是否允许未注册用户浏览树洞
+### 是否允许未注册用户浏览鼠洞
 allow_unregistered_access: true
 
 ### IP地址库文件，见 https://dev.maxmind.com/geoip/geoip2/geolite2/
@@ -90,7 +90,7 @@ dcs3bucket: ""
 dcs3endpoint: ""
 dcsecretkey: ""
 
-### 不允许用户举报的树洞号列表
+### 不允许用户举报的鼠洞号列表
 disallow_report_pids:
   - 118
   - 1
@@ -125,7 +125,7 @@ img_base_url_bak: https://img2.thuhole.com/
 ### 每个IP每天最多发送多少注册邮件
 max_email_per_ip_per_day: 10
 
-### 置顶的树洞号列表
+### 置顶的鼠洞号列表
 pin_pids: [ ]
 
 ### reCAPTCHA v3人机认证的通过分数阈值
@@ -134,7 +134,7 @@ recaptcha_threshold: 0.5
 ### 当allow_unregistered_access=false时，允许未登录游客访问的IP白名单
 subnets_whitelist: [ ]
 
-### 最新树洞Web版的版本号。树洞Web版会通过检查此版本号自动更新。
+### 最新鼠洞Web版的版本号。鼠洞Web版会通过检查此版本号自动更新。
 web_frontend_version: v0.0.0
 
 ### 当服务宕机时的提示信息

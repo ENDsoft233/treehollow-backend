@@ -164,7 +164,7 @@ func sendComment(c *gin.Context) {
 		err = utils.UnscopedTx(tx, canViewDelete).Clauses(clause.Locking{Strength: "UPDATE"}).First(&post, int32(pid)).Error
 		if err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
-				base.HttpReturnWithErr(c, -101, logger.NewSimpleError("SendCommentNoPid", "找不到这条树洞", logger.WARN))
+				base.HttpReturnWithErr(c, -101, logger.NewSimpleError("SendCommentNoPid", "找不到这条鼠洞", logger.WARN))
 			} else {
 				base.HttpReturnWithCodeMinusOne(c, logger.NewError(err, "CommentGetPostFailed", consts.DatabaseReadFailedString))
 			}
@@ -177,7 +177,7 @@ func sendComment(c *gin.Context) {
 				Where("id = ? and post_id = ?", replyToCommentID, pid).First(&replyToComment).Error
 			if err != nil {
 				if errors.Is(err, gorm.ErrRecordNotFound) {
-					base.HttpReturnWithCodeMinusOne(c, logger.NewSimpleError("SendCommentNoReplyToPid", "找不到你要评论的树洞", logger.WARN))
+					base.HttpReturnWithCodeMinusOne(c, logger.NewSimpleError("SendCommentNoReplyToPid", "找不到你要评论的鼠洞", logger.WARN))
 				} else {
 					base.HttpReturnWithCodeMinusOne(c, logger.NewError(err, "CommentGetReplyToPostFailed", consts.DatabaseReadFailedString))
 				}
@@ -247,7 +247,7 @@ func sendComment(c *gin.Context) {
 			if replyToUserID != user.ID {
 				pushMessages = append(pushMessages, base.PushMessage{
 					Message:   utils.TrimText(text, 100),
-					Title:     name + "回复了树洞#" + strconv.Itoa(pid),
+					Title:     name + "回复了鼠洞#" + strconv.Itoa(pid),
 					PostID:    int32(pid),
 					CommentID: commentID,
 					Type:      model.ReplyMeComment,
@@ -261,7 +261,7 @@ func sendComment(c *gin.Context) {
 				} else if attention.UserID != user.ID {
 					pushMessages = append(pushMessages, base.PushMessage{
 						Message:   utils.TrimText(text, 100),
-						Title:     name + "回复了树洞#" + strconv.Itoa(pid),
+						Title:     name + "回复了鼠洞#" + strconv.Itoa(pid),
 						PostID:    int32(pid),
 						CommentID: commentID,
 						Type:      model.CommentInFavorited,
@@ -348,7 +348,7 @@ func getPostOrCommentText(post *base.Post, comment *base.Comment, isComment bool
 	return post.Text
 }
 
-//TODO: (low priority) test this function
+// TODO: (low priority) test this function
 func handleReport(isComment bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		_ = base.GetDb(false).Transaction(func(tx *gorm.DB) error {
@@ -370,7 +370,7 @@ func handleReport(isComment bool) gin.HandlerFunc {
 			}
 			if err3 != nil {
 				if errors.Is(err3, gorm.ErrRecordNotFound) {
-					base.HttpReturnWithErrAndAbort(c, -101, logger.NewSimpleError("ReportNoId", "找不到这条树洞", logger.WARN))
+					base.HttpReturnWithErrAndAbort(c, -101, logger.NewSimpleError("ReportNoId", "找不到这条鼠洞", logger.WARN))
 				} else {
 					base.HttpReturnWithCodeMinusOne(c, logger.NewError(err3, "GetReportPostOrCommentFailed", consts.DatabaseReadFailedString))
 				}

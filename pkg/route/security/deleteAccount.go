@@ -48,7 +48,7 @@ func deleteAccount(c *gin.Context) {
 		if err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				base.HttpReturnWithCodeMinusOne(c, logger.NewSimpleError("NonceNotFound",
-					"没有找到nonce对应的账户。请你重新查看刚刚注册树洞后收到的欢迎邮件中的“找回密码口令”(nonce)。"+
+					"没有找到nonce对应的账户。请你重新查看刚刚注册鼠洞后收到的欢迎邮件中的“找回密码口令”(nonce)。"+
 						"如果仍然无法解决问题，请联系"+viper.GetString("contact_email")+"。", logger.WARN))
 				return errors.New("NonceNotFound")
 			}

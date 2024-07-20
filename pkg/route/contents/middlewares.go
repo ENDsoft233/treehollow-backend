@@ -151,7 +151,7 @@ func disallowBannedPostUsers() gin.HandlerFunc {
 				if err2 == nil {
 					base.HttpReturnWithCodeMinusOneAndAbort(c,
 						logger.NewSimpleError("DisallowBan", "很抱歉，您当前处于禁言状态，在"+
-							utils.TimestampToString(ban.ExpireAt)+"之前您将无法发布树洞。", logger.WARN))
+							utils.TimestampToString(ban.ExpireAt)+"之前您将无法发布鼠洞。", logger.WARN))
 					return
 				}
 			}
@@ -177,7 +177,7 @@ func checkReportParams(isPost bool) gin.HandlerFunc {
 		if isPost {
 			typ := c.PostForm("type")
 			if _, ok := utils.ContainsInt(viper.GetIntSlice("disallow_report_pids"), id); ok && typ == "report" {
-				base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewSimpleError("DisallowReport", "这个树洞无法举报哦", logger.WARN))
+				base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewSimpleError("DisallowReport", "这个鼠洞无法举报哦", logger.WARN))
 				return
 			}
 		}
@@ -198,7 +198,7 @@ func checkParameterTextAndImage() gin.HandlerFunc {
 			base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewSimpleError("NoContent", "请输入内容", logger.INFO))
 			return
 		} else if typ != "text" && typ != "image" {
-			base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewSimpleError("UnknownType", "未知类型的树洞", logger.WARN))
+			base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewSimpleError("UnknownType", "未知类型的鼠洞", logger.WARN))
 			return
 		} else if int(float64(len(img))/consts.Base64Rate) > consts.ImgMaxLength {
 			base.HttpReturnWithCodeMinusOneAndAbort(c, logger.NewSimpleError("TooLargeImage", "图片大小超出限制！", logger.WARN))
