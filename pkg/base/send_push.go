@@ -47,8 +47,6 @@ func PreProcessPushMessages(tx *gorm.DB, msgs []PushMessage) error {
 }
 
 func SendToPushService(msgs []PushMessage) {
-	log.Printf("going to push messages: %v\n", msgs)
-
 	// 预处理，取出用户的 userId 到库里找他的 openId
 	pushUserIDs := make([]int32, 0, len(msgs))
 	pushMap := make(map[int32]*PushMessage)
@@ -74,11 +72,12 @@ func SendToPushService(msgs []PushMessage) {
 		if msg == nil {
 			continue
 		}
+		log.Printf("userId %d matches openId %s\n", user.ID, user.WechatOpenId)
 		msg.OpenID = user.WechatOpenId
 		pushMessages = append(pushMessages, *msg)
 	}
 
-	log.Printf("push messages prepared: %v\n", pushMessages)
+	log.Printf("going to push messages: %v\n", pushMessages)
 
 	postBody, _ := json.Marshal(pushMessages)
 	bytesBody := bytes.NewBuffer(postBody)
@@ -88,6 +87,8 @@ func SendToPushService(msgs []PushMessage) {
 		log.Printf("push request build failed: %s\n", err2)
 		return
 	}
+	req.Header.Set("Content-Type", "application/json")
+
 	clientHttp := &http.Client{}
 	resp, err3 := clientHttp.Do(req)
 	if err3 != nil {
