@@ -247,7 +247,7 @@ func sendComment(c *gin.Context) {
 			if replyToUserID != user.ID {
 				pushMessages = append(pushMessages, base.PushMessage{
 					Message:   utils.TrimText(text, 100),
-					Title:     name + "回复了鼠洞#" + strconv.Itoa(pid),
+					Title:     name + "回复了您的鼠洞#" + strconv.Itoa(pid),
 					PostID:    int32(pid),
 					CommentID: commentID,
 					Type:      model.ReplyMeComment,
@@ -261,7 +261,7 @@ func sendComment(c *gin.Context) {
 				} else if attention.UserID != user.ID {
 					pushMessages = append(pushMessages, base.PushMessage{
 						Message:   utils.TrimText(text, 100),
-						Title:     name + "回复了鼠洞#" + strconv.Itoa(pid),
+						Title:     name + "回复了您关注的鼠洞#" + strconv.Itoa(pid),
 						PostID:    int32(pid),
 						CommentID: commentID,
 						Type:      model.CommentInFavorited,

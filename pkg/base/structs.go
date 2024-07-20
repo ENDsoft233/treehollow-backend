@@ -209,6 +209,7 @@ type PushMessage struct {
 	Type      model.PushType
 	UpdatedAt time.Time      `gorm:"index"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
+	OpenID    string
 }
 
 //type Messages struct {
